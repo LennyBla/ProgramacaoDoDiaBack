@@ -1,13 +1,13 @@
 #!/bin/bash
 
-# Instala pip
-curl -sSL https://raw.githubusercontent.com/pypa/get-pip/master/get-pip.py | python -
+# Baixa e instala o pip
+curl -sSL https://bootstrap.pypa.io/get-pip.py | python3.9 -
 
-# Atualiza pip
-python -m pip install --upgrade pip
+# Atualiza o pip para a última versão
+python3.9 -m pip install --upgrade pip
 
-# Instala dependências
-pip install -r requirements.txt
+# Instala as dependências do projeto
+python3.9 -m pip install -r requirements.txt
 
-# Coleta arquivos estáticos
+# Coleta os arquivos estáticos
 python3.9 manage.py collectstatic --noinput
