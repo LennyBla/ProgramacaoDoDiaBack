@@ -1,0 +1,1 @@
+web: gunicorn backend.myapp.wsgi --bind=:8080 --workers=3
