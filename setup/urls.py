@@ -30,6 +30,7 @@ admin_router.register('kid', KidViewSet, basename="criancas")
 # Public (v1) and admin (v2) URLs
 urlpatterns = [
    path('admin/', admin.site.urls),  # Corrected the admin path
+   path('', include('recreacao.urls')),
    path('api/v1/card/', ListaCardView.as_view(), name='list_card'),
    path('api/v1/kid/', ListaKidView.as_view(), name='list_kid'),
    path('api/v1/cadastro-kids/', KidViewSet.as_view({'post': 'create'}), name='cadastro_kids'),
