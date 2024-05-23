@@ -2,19 +2,12 @@
   "version": 2,
   "builds": [
     {
-      "src": "backend/setup/wsgi.py",
+      "src": "setup/wsgi.py",
       "use": "@vercel/python",
       "config": {
         "maxLambdaSize": "15mb",
         "runtime": "python3.9",
         "installCommand": "pip install -r requirements.txt && python manage.py collectstatic --noinput"
-      }
-    },
-    {
-      "src": "build_files.sh",
-      "use": "@vercel/static-build",
-      "config": {
-        "distDir": "staticfiles_build"
       }
     }
   ],
@@ -25,7 +18,7 @@
     },
     {
       "src": "/(.*)",
-      "dest": "backend/setup/wsgi.py"
+      "dest": "setup/wsgi.py"
     }
   ]
 }
