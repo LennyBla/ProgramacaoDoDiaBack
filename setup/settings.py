@@ -13,10 +13,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-!jp904ldw&d6x3#)iznokh15cwt0fdx*l$^1kk$vc17r#%5*v4'
+#SECRET_KEY = 'django-insecure-!jp904ldw&d6x3#)iznokh15cwt0fdx*l$^1kk$vc17r#%5*v4'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+#DEBUG = True
+
+
+SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
+DEBUG = os.getenv('DJANGO_DEBUG', 'False') == 'True'
 
 ALLOWED_HOSTS = ['*', '127.0.0.1', '.vercel.app', 'localhost']
 
@@ -78,7 +82,7 @@ DATABASES = {
         'NAME': os.getenv('PGDATABASE'),
         'USER': os.getenv('PGUSER'),
         'PASSWORD': os.getenv('PGPASSWORD'),
-        'HOST': os.getenv('PGHOST'), 
+        'HOST': os.getenv('PGHOST'),
         'PORT': os.getenv('PGPORT', 5432),
     }
 }
