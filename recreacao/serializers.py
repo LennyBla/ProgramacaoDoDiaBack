@@ -7,34 +7,29 @@ from django.core.exceptions import ValidationError
 
 class UserSerializer(serializers.ModelSerializer):
     confirm_password = serializers.CharField(write_only=True)
-
     class Meta:
         model = User
         fields = ['username', 'email', 'password', 'confirm_password']
         extra_kwargs = {'password': {'write_only': True}}
 
     def validate(self, data):
-        # Password validation (8 characters, special characters, uppercase/lowercase)
         password = data.get('password')
         try:
             validate_password(password)
         except ValidationError as e:
             raise serializers.ValidationError({"password": e.messages})
 
-        # Password confirmation
         if data.get('password') != data.get('confirm_password'):
             raise serializers.ValidationError("As senhas não coincidem")
 
-        # Username validation (allow spaces, require @)
         username = data.get('username')
         if not username:
             raise serializers.ValidationError("O username é obrigatório")
         if '@' not in username:
             raise serializers.ValidationError("O username deve conter @")
 
-        # Email validation (optional)
         email = data.get('email')
-        if email and not email.strip():  # Check for empty email after stripping whitespace
+        if email and not email.strip(): 
             raise serializers.ValidationError("O email não pode ser vazio")
 
         return data
@@ -43,17 +38,11 @@ class UserSerializer(serializers.ModelSerializer):
         validated_data.pop('confirm_password', None)
         user = User(
             username=validated_data['username'],
-            email=validated_data['email'].strip() if validated_data.get('email') else None,  # Strip whitespace if email is provided
+            email=validated_data['email'].strip() if validated_data.get('email') else None,
             password=make_password(validated_data['password'])
         )
         user.save()
         return user
-    #Verificar se o usuario esta autenticado
-    #Validacao de senha. 8Cataretres, cateres epseciais, letra maiuscula e menuscula
-    #Validacao de email e username, deve ser ogrigatorio o user name conter @ 
-    #Deve aceitar espaço em branco, caso nao tenha deve aceitar tambem
-    #caso nao seja possivel, o usuario deve ser avisado que esta esta cadastrando com espeço em branco e nao deixar o usuario proceguir
-    # ou iguinorar o espeço em branco e busacar o nome do usaurio banco e permitie o acesso ao sistema
 class RecreacaoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Recreacao
