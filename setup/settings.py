@@ -13,9 +13,12 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 import os
 from pathlib import Path
 from datetime import timedelta
+from dotenv import load_dotenv
+
+load_dotenv()
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
@@ -27,8 +30,6 @@ SECRET_KEY = 'django-insecure-!jp904ldw&d6x3#)iznokh15cwt0fdx*l$^1kk$vc17r#%5*v4
 DEBUG = True
 
 ALLOWED_HOSTS = ['*', '127.0.0.1', '.vercel.app', 'localhost']
-
-#ALLOWED_HOSTS = ['127.0.0.1', '.vercel.app', 'localhost']
 
 # Application definition
 
@@ -50,9 +51,8 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
-    "corsheaders.middleware.CorsMiddleware",
-    "django.middleware.common.CommonMiddleware",
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
@@ -79,39 +79,21 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'setup.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'reacreaca',
-        'USER': 'thais.forentin26@gmail.com',
-        'PASSWORD': '149032860Th.',
-        'HOST': 'hidden-fire-62915639',
-        'PORT': '5432',
+        'NAME': os.getenv('PGDATABASE'),
+        'USER': os.getenv('PGUSER'),
+        'PASSWORD': os.getenv('PGPASSWORD'),
+        'HOST': os.getenv('PGHOST'),
+        'PORT': os.getenv('PGPORT', 5432),
+        'OPTIONS': {
+            'sslmode': 'require',
+        },
     }
 }
-
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
-
-
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'recreacao',
-#         'USER': '',
-#         'PASSWORD': '',
-#         'HOST': '127.0.0.1',
-#         #   'PORT': '5432',
-#     }
-# }
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
@@ -131,7 +113,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
 
@@ -145,25 +126,8 @@ USE_L10N = True
 
 USE_TZ = True
 
-# APPEND_SLASH = False
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
-
-STATIC_URL = '/static/'
-
-# Default primary key field type
-# https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
-
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000", 
-    #https://programacaodo-dia.vercel.app/
-    
-]
-
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
@@ -173,6 +137,7 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
+# Django Rest Framework
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 6,
@@ -181,22 +146,29 @@ REST_FRAMEWORK = {
     ]
 }
 
+# Django CORS Headers
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",
+]
+
+# Default primary key field type
+# https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
+
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# SIMPLE_JWT settings can be uncommented and configured as needed
 # SIMPLE_JWT = {
 #     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),
 #     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
-
 #     'AUTH_HEADER_TYPES': ('Bearer',),
 #     'AUTH_HEADER_NAME': 'HTTP_AUTHORIZATION',
 #     'USER_ID_FIELD': 'id',
 #     'USER_ID_CLAIM': 'user_id',
 #     'USER_AUTHENTICATION_RULE': 'rest_framework_simplejwt.authentication.default_user_authentication_rule',
-
 #     'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
 #     'TOKEN_TYPE_CLAIM': 'token_type',
 #     'TOKEN_USER_CLASS': 'rest_framework_simplejwt.models.TokenUser',
-
 #     'JTI_CLAIM': 'jti',
-
 #     'SLIDING_TOKEN_REFRESH_EXP_CLAIM': 'refresh_exp',
 #     'SLIDING_TOKEN_LIFETIME': timedelta(minutes=5),
 #     'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
