@@ -87,9 +87,9 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'reacreaca',
-        'USER': 'root',
-        'PASSWORD': '',
-        'HOST': '127.0.0.1',
+        'USER': 'thais.forentin26@gmail.com',
+        'PASSWORD': '149032860Th.',
+        'HOST': 'hidden-fire-62915639',
         'PORT': '5432',
     }
 }
