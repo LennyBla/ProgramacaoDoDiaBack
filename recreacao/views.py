@@ -11,7 +11,7 @@ from .serializers import RecreacaoSerializer, CardSerializer, KidSerializer, Lis
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    permission_classes = [AllowAny] 
+    permission_classes = [AllowAny]
 
     def login(self, request):
         username = request.data.get('username')
@@ -36,7 +36,7 @@ class RecreacaoViewSet(viewsets.ReadOnlyModelViewSet):
     ordering_fields = ['nome']
     search_fields = ['nome']
     pagination_class = None
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]  # Adjust as needed
 
 class CardViewSet(viewsets.ModelViewSet):
     queryset = Card.objects.all()
@@ -45,7 +45,7 @@ class CardViewSet(viewsets.ModelViewSet):
     ordering_fields = ['nome']
     search_fields = ['nome']
     pagination_class = None
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]  # Adjust as needed
 
     def perform_create(self, serializer):
         serializer.save()
@@ -66,7 +66,7 @@ class KidViewSet(viewsets.ModelViewSet):
     ordering_fields = ['nome']
     search_fields = ['nome']
     pagination_class = None
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]  # Adjust as needed
 
     def perform_create(self, serializer):
         serializer.save()
@@ -83,25 +83,25 @@ class KidViewSet(viewsets.ModelViewSet):
 class ListaCardsDeUmRecreacaoView(generics.ListAPIView):
     serializer_class = ListaCardsDeUmRecreacaoSerializer
     pagination_class = None
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
 
     def get_queryset(self):
-        pk = self.kwargs.get('pk') 
+        pk = self.kwargs.get('pk')
         if pk is not None:
             queryset = Card.objects.filter(recreacao_id=pk)
             return queryset
         else:
-            return Card.objects.none()  
+            return Card.objects.none()
 
 class ListaRecreacaoView(generics.ListAPIView):
     queryset = Recreacao.objects.all()
     serializer_class = RecreacaoSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
 
 class ListaCardView(generics.ListAPIView):
     queryset = Card.objects.all()
     serializer_class = CardSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
 
 class ListaKidView(generics.ListAPIView):
     queryset = Kid.objects.all()
@@ -109,4 +109,4 @@ class ListaKidView(generics.ListAPIView):
     filter_backends = [DjangoFilterBackend, filters.OrderingFilter, filters.SearchFilter]
     ordering_fields = ['nome']
     filterset_fields = ['nome']
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]  # Adjust
