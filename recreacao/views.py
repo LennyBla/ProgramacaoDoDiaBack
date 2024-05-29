@@ -1,7 +1,6 @@
 from django.contrib.auth import authenticate, login
 from rest_framework.response import Response
-from rest_framework import status
-from rest_framework import viewsets, generics, filters
+from rest_framework import status, viewsets, generics, filters
 from rest_framework.views import APIView
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.permissions import IsAuthenticated, AllowAny
@@ -22,17 +21,12 @@ class UserViewSet(viewsets.ModelViewSet):
         if user is not None:
             login(request, user)
             refresh = RefreshToken.for_user(user)
-
-            print(f'Usuário {user.username} fez login com sucesso.')
-            
             return Response({
                 'token': str(refresh.access_token),
                 'access': str(refresh.access_token),
                 'message': 'Login successful'
             }, status=status.HTTP_200_OK)
         else:
-            print(f'Falha no login para o usuário {username}.')
-
             return Response({'error': 'Credenciais inválidas'}, status=status.HTTP_401_UNAUTHORIZED)
 
 class RecreacaoViewSet(viewsets.ReadOnlyModelViewSet):
@@ -41,7 +35,8 @@ class RecreacaoViewSet(viewsets.ReadOnlyModelViewSet):
     filter_backends = [DjangoFilterBackend, filters.OrderingFilter, filters.SearchFilter]
     ordering_fields = ['nome']
     search_fields = ['nome']
-    pagination_class=None
+    pagination_class = None
+    permission_classes = [IsAuthenticated]
 
 class CardViewSet(viewsets.ModelViewSet):
     queryset = Card.objects.all()
@@ -49,7 +44,8 @@ class CardViewSet(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend, filters.OrderingFilter, filters.SearchFilter]
     ordering_fields = ['nome']
     search_fields = ['nome']
-    pagination_class=None
+    pagination_class = None
+    permission_classes = [IsAuthenticated]
 
     def perform_create(self, serializer):
         serializer.save()
@@ -70,8 +66,7 @@ class KidViewSet(viewsets.ModelViewSet):
     ordering_fields = ['nome']
     search_fields = ['nome']
     pagination_class = None
-    queryset = Kid.objects.all().order_by('nome')
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
 
     def perform_create(self, serializer):
         serializer.save()
@@ -85,11 +80,10 @@ class KidViewSet(viewsets.ModelViewSet):
         instance.delete()
         print(f'Criança excluída com sucesso pelo usuário {self.request.user.username}.')
 
-        
-
 class ListaCardsDeUmRecreacaoView(generics.ListAPIView):
     serializer_class = ListaCardsDeUmRecreacaoSerializer
     pagination_class = None
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         pk = self.kwargs.get('pk') 
@@ -102,6 +96,7 @@ class ListaCardsDeUmRecreacaoView(generics.ListAPIView):
 class ListaRecreacaoView(generics.ListAPIView):
     queryset = Recreacao.objects.all()
     serializer_class = RecreacaoSerializer
+    permission_classes = [IsAuthenticated]
 
 class ListaCardView(generics.ListAPIView):
     queryset = Card.objects.all()
