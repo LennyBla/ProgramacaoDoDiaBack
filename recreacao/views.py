@@ -12,6 +12,7 @@ from .serializers import RecreacaoSerializer, CardSerializer, KidSerializer, Lis
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+    permission_classes = [AllowAny] 
 
     def login(self, request):
         username = request.data.get('username')
@@ -26,6 +27,7 @@ class UserViewSet(viewsets.ModelViewSet):
             
             return Response({
                 'token': str(refresh.access_token),
+                'access': str(refresh.access_token),
                 'message': 'Login successful'
             }, status=status.HTTP_200_OK)
         else:
@@ -83,6 +85,8 @@ class KidViewSet(viewsets.ModelViewSet):
         instance.delete()
         print(f'Criança excluída com sucesso pelo usuário {self.request.user.username}.')
 
+        
+
 class ListaCardsDeUmRecreacaoView(generics.ListAPIView):
     serializer_class = ListaCardsDeUmRecreacaoSerializer
     pagination_class = None
@@ -102,6 +106,7 @@ class ListaRecreacaoView(generics.ListAPIView):
 class ListaCardView(generics.ListAPIView):
     queryset = Card.objects.all()
     serializer_class = CardSerializer
+    permission_classes = [IsAuthenticated]
 
 class ListaKidView(generics.ListAPIView):
     queryset = Kid.objects.all()

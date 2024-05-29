@@ -7,6 +7,7 @@ from django.core.exceptions import ValidationError
 
 class UserSerializer(serializers.ModelSerializer):
     confirm_password = serializers.CharField(write_only=True)
+
     class Meta:
         model = User
         fields = ['username', 'email', 'password', 'confirm_password']
@@ -19,6 +20,7 @@ class UserSerializer(serializers.ModelSerializer):
         except ValidationError as e:
             raise serializers.ValidationError({"password": e.messages})
 
+     
         if data.get('password') != data.get('confirm_password'):
             raise serializers.ValidationError("As senhas não coincidem")
 
@@ -28,6 +30,7 @@ class UserSerializer(serializers.ModelSerializer):
         if '@' not in username:
             raise serializers.ValidationError("O username deve conter @")
 
+      
         email = data.get('email')
         if email and not email.strip(): 
             raise serializers.ValidationError("O email não pode ser vazio")
@@ -38,7 +41,7 @@ class UserSerializer(serializers.ModelSerializer):
         validated_data.pop('confirm_password', None)
         user = User(
             username=validated_data['username'],
-            email=validated_data['email'].strip() if validated_data.get('email') else None,
+            email=validated_data['email'].strip() if validated_data.get('email') else None,  
             password=make_password(validated_data['password'])
         )
         user.save()

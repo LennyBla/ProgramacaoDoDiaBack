@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.urls import path, include
-from recreacao.views import RecreacaoViewSet, CardViewSet, UserViewSet, KidViewSet, ListaCardView, ListaKidView, ListaCardsDeUmRecreacaoView 
+from recreacao.views import RecreacaoViewSet, CardViewSet, UserViewSet, KidViewSet, ListaCardView, ListaKidView, ListaCardsDeUmRecreacaoView
 from rest_framework import routers
 from django.conf import settings
 from django.conf.urls.static import static
@@ -17,7 +17,7 @@ schema_view = get_schema_view(
         license=openapi.License(name="BSD License"),
     ),
     public=True,
-    permission_classes=(permissions.AllowAny,),
+    permission_classes=[permissions.AllowAny],
 )
 
 # Router for admin (v2) URLs
@@ -30,14 +30,16 @@ admin_router.register('kid', KidViewSet, basename="criancas")
 # Public (v1) and admin (v2) URLs
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('accounts/', include('django.contrib.auth.urls')),
+
     path('api/v1/card/', ListaCardView.as_view(), name='list_card'),
     path('api/v1/kid/', ListaKidView.as_view(), name='list_kid'),
     path('api/v1/cadastro-kids/', KidViewSet.as_view({'post': 'create'}), name='cadastro_kids'),
+
     path('api/v2/login/', UserViewSet.as_view({'post': 'login'}), name='login'),
     path('api/v2/user/', UserViewSet.as_view({'post': 'create'}), name='cadastro_colaborador'),
     path('api/v2/', include(admin_router.urls)),
-    path('api/v1/recreacao/<int:pk>/card/', ListaCardsDeUmRecreacaoView.as_view(), name='list_recreacao_card'),
-    path('', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'), 
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
-#] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+    path('api/v1/recreacao/<int:pk>/card/', ListaCardsDeUmRecreacaoView.as_view(), name='list_recreacao_card'),
+    path('', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
