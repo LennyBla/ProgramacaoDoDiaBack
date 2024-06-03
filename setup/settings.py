@@ -159,7 +159,6 @@ REST_FRAMEWORK = {
 # Django CORS Headers
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
-    #"https://programacaodo-dia.vercel.app",
     "https://programacaodo-dia.vercel.app",
     "https://programacaodo-e60oh5bl8-thais-s-projects-c05b20fd.vercel.app",
  ]

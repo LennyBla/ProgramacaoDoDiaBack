@@ -20,14 +20,12 @@ schema_view = get_schema_view(
     permission_classes=[permissions.AllowAny],
 )
 
-# Router for admin (v2) URLs
 admin_router = routers.DefaultRouter()
 admin_router.register('recreacao', RecreacaoViewSet, basename="recreacao")
 admin_router.register('card', CardViewSet, basename="card")
 admin_router.register('user', UserViewSet, basename="user")
 admin_router.register('kid', KidViewSet, basename="criancas")
 
-# Public (v1) and admin (v2) URLs
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('django.contrib.auth.urls')),

@@ -27,7 +27,7 @@ class UserViewSet(viewsets.ModelViewSet):
                 'message': 'Login successful'
             }, status=status.HTTP_200_OK)
         else:
-            return Response({'error': 'Credenciais inválidas'}, status=status.HTTP_401_UNAUTHORIZED)
+            return Response({'error': 'Erro ao fazer o login. Por favor, verifique se a senha e e-mail estão corretos.'}, status=status.HTTP_401_UNAUTHORIZED)
 
 class RecreacaoViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Recreacao.objects.all()
@@ -36,7 +36,7 @@ class RecreacaoViewSet(viewsets.ReadOnlyModelViewSet):
     ordering_fields = ['nome']
     search_fields = ['nome']
     pagination_class = None
-    permission_classes = [IsAuthenticated]  # Adjust as needed
+    permission_classes = [IsAuthenticated]
 
 class CardViewSet(viewsets.ModelViewSet):
     queryset = Card.objects.all()
@@ -45,7 +45,7 @@ class CardViewSet(viewsets.ModelViewSet):
     ordering_fields = ['nome']
     search_fields = ['nome']
     pagination_class = None
-    permission_classes = [IsAuthenticated]  # Adjust as needed
+    permission_classes = [IsAuthenticated]
 
     def perform_create(self, serializer):
         serializer.save()
@@ -66,11 +66,17 @@ class KidViewSet(viewsets.ModelViewSet):
     ordering_fields = ['nome']
     search_fields = ['nome']
     pagination_class = None
-    permission_classes = [IsAuthenticated]  # Adjust as needed
+
+    def get_permissions(self):
+        if self.action == 'create':
+            self.permission_classes = [AllowAny]
+        else:
+            self.permission_classes = [IsAuthenticated]
+        return super().get_permissions()
 
     def perform_create(self, serializer):
         serializer.save()
-        print(f'Criança cadastrada com sucesso pelo usuário {self.request.user.username}.')
+        print('Criança cadastrada com sucesso.')
 
     def perform_update(self, serializer):
         serializer.save()
@@ -109,4 +115,4 @@ class ListaKidView(generics.ListAPIView):
     filter_backends = [DjangoFilterBackend, filters.OrderingFilter, filters.SearchFilter]
     ordering_fields = ['nome']
     filterset_fields = ['nome']
-    permission_classes = [IsAuthenticated]  # Adjust
+    permission_classes = [IsAuthenticated]

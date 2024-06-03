@@ -2,8 +2,6 @@ from rest_framework import serializers
 from recreacao.models import Recreacao, Card, Kid
 from django.contrib.auth.models import User
 from django.contrib.auth.hashers import make_password
-from django.contrib.auth.password_validation import validate_password
-from django.core.exceptions import ValidationError
 
 class UserSerializer(serializers.ModelSerializer):
     confirm_password = serializers.CharField(write_only=True)
@@ -15,12 +13,13 @@ class UserSerializer(serializers.ModelSerializer):
 
     def validate(self, data):
         password = data.get('password')
-        try:
-            validate_password(password)
-        except ValidationError as e:
-            raise serializers.ValidationError({"password": e.messages})
 
-     
+        # Remove a validação de senha
+        # try:
+        #     validate_password(password)
+        # except ValidationError as e:
+        #     raise serializers.ValidationError({"password": e.messages})
+
         if data.get('password') != data.get('confirm_password'):
             raise serializers.ValidationError("As senhas não coincidem")
 
@@ -30,9 +29,8 @@ class UserSerializer(serializers.ModelSerializer):
         if '@' not in username:
             raise serializers.ValidationError("O username deve conter @")
 
-      
         email = data.get('email')
-        if email and not email.strip(): 
+        if email and not email.strip():
             raise serializers.ValidationError("O email não pode ser vazio")
 
         return data
@@ -41,11 +39,12 @@ class UserSerializer(serializers.ModelSerializer):
         validated_data.pop('confirm_password', None)
         user = User(
             username=validated_data['username'],
-            email=validated_data['email'].strip() if validated_data.get('email') else None,  
+            email=validated_data['email'].strip() if validated_data.get('email') else None,
             password=make_password(validated_data['password'])
         )
         user.save()
         return user
+
 class RecreacaoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Recreacao
@@ -56,9 +55,9 @@ class CardSerializer(serializers.ModelSerializer):
         model = Card
         fields = '__all__'
 
-
 class ListaCardsDeUmRecreacaoSerializer(serializers.ModelSerializer):
     recreacao_nome = serializers.ReadOnlyField(source='recreacao.nome')
+
     class Meta:
         model = Card
         fields = '__all__'
