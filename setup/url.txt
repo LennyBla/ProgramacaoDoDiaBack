@@ -1,6 +1,10 @@
 from django.contrib import admin
 from django.urls import path, include
-from recreacao.views import RecreacaoViewSet, CardViewSet, UserViewSet, KidViewSet, ListaCardView, ListaKidView, ListaCardsDeUmRecreacaoView, KidCardViewSet
+from recreacao.views import (
+    RecreacaoViewSet, CardViewSet, UserViewSet, KidViewSet,
+    ListaCardView, ListaKidView, ListaCardsDeUmRecreacaoView,
+    KidCardViewSet
+)
 from rest_framework import routers
 from django.conf import settings
 from django.conf.urls.static import static
@@ -27,7 +31,6 @@ admin_router.register('user', UserViewSet, basename="user")
 admin_router.register('kid', KidViewSet, basename="criancas")
 admin_router.register('kid-card', KidCardViewSet, basename="kid-card")
 
-
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('django.contrib.auth.urls')),
@@ -35,11 +38,12 @@ urlpatterns = [
     path('api/v1/card/', ListaCardView.as_view(), name='list_card'),
     path('api/v1/kid/', ListaKidView.as_view(), name='list_kid'),
 
-    #path('api/v2/kids-presente/', KidViewSet.as_view({'get': 'list_presente'}), name='list_kids_presente'),
-    #path('api/v2/kids-nao-presente/', KidViewSet.as_view({'get': 'list_nao_presente'}), name='list_kids_nao_presente'),
-    # path('api/v1/kid-card/', KidCardViewSet.as_view(), name='create_kid_card'),
-    #path('api/v2/kid-card', KidCardViewSet.as_view(), name=list )Os dois id é referente ao Kid-card id de crianças de um card, id de um card de uma crinça
-    
+    path('api/v2/kids-presente/', KidViewSet.as_view({'get': 'list_presente'}), name='list_kids_presente'),
+    path('api/v2/kids-nao-presente/', KidViewSet.as_view({'get': 'list_nao_presente'}), name='list_kids_nao_presente'),
+
+    path('api/v2/kid-card/', KidCardViewSet.as_view({'get': 'list'}), name='list_kid_card'),
+    path('api/v2/kid-card/', KidCardViewSet.as_view({'post': 'create'}), name='create_kid_card'),
+
     path('api/v1/cadastro-kids/', KidViewSet.as_view({'post': 'create'}), name='cadastro_kids'),
 
     path('api/v2/login/', UserViewSet.as_view({'post': 'login'}), name='login'),
