@@ -1,7 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User as AuthUser 
 from django.utils import timezone
-
 import uuid
 
 class User(models.Model):
@@ -29,7 +28,7 @@ class Kid(models.Model):
     numeroContato = models.CharField(max_length=20, blank=True, null=True)
     numeroApartamento = models.CharField(max_length=10)
     horarioCheckout = models.DateTimeField()
-
+    
     class Meta:
         unique_together = (('nome', 'numeroApartamento'),)
         ordering = ['nome']
@@ -49,6 +48,17 @@ class Card(models.Model):
     titulo = models.CharField(max_length=100)
     descricao = models.TextField()
     
-    
     def __str__(self):
         return self.titulo
+
+#---------------------------------------------------------------------------------------------------------
+class KidCard(models.Model):
+    kid = models.ForeignKey(Kid, on_delete=models.CASCADE)
+    card = models.ForeignKey(Card, on_delete=models.CASCADE)
+    inscricao_data = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = (('kid', 'card'),)
+
+    def __str__(self):
+        return f"{self.kid.nome} - {self.card.titulo}"

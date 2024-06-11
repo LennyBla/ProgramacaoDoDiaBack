@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from recreacao.models import Recreacao, Card, Kid
+from recreacao.models import Recreacao, Card, Kid, KidCard
 from django.contrib.auth.models import User
 from django.contrib.auth.hashers import make_password
 
@@ -79,3 +79,9 @@ class KidSerializer(serializers.ModelSerializer):
             )
 
         return Kid.objects.create(**validated_data)
+    
+#---------------------------------------------------------------------------------------------------------
+class KidCardSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = KidCard
+        fields = '__all__'

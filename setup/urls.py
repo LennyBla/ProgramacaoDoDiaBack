@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.urls import path, include
-from recreacao.views import RecreacaoViewSet, CardViewSet, UserViewSet, KidViewSet, ListaCardView, ListaKidView, ListaCardsDeUmRecreacaoView
+from recreacao.views import RecreacaoViewSet, CardViewSet, UserViewSet, KidViewSet, ListaCardView, ListaKidView, ListaCardsDeUmRecreacaoView, KidCardViewSet
 from rest_framework import routers
 from django.conf import settings
 from django.conf.urls.static import static
@@ -25,6 +25,8 @@ admin_router.register('recreacao', RecreacaoViewSet, basename="recreacao")
 admin_router.register('card', CardViewSet, basename="card")
 admin_router.register('user', UserViewSet, basename="user")
 admin_router.register('kid', KidViewSet, basename="criancas")
+admin_router.register('kid-card', KidCardViewSet, basename="kid-card")
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -32,6 +34,7 @@ urlpatterns = [
 
     path('api/v1/card/', ListaCardView.as_view(), name='list_card'),
     path('api/v1/kid/', ListaKidView.as_view(), name='list_kid'),
+    
     path('api/v1/cadastro-kids/', KidViewSet.as_view({'post': 'create'}), name='cadastro_kids'),
 
     path('api/v2/login/', UserViewSet.as_view({'post': 'login'}), name='login'),

@@ -5,8 +5,8 @@ from rest_framework.views import APIView
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework_simplejwt.tokens import RefreshToken
-from .models import Recreacao, Card, Kid, User
-from .serializers import RecreacaoSerializer, CardSerializer, KidSerializer, ListaCardsDeUmRecreacaoSerializer, UserSerializer
+from .models import Recreacao, Card, Kid, User, KidCard
+from .serializers import RecreacaoSerializer, CardSerializer, KidSerializer, ListaCardsDeUmRecreacaoSerializer, UserSerializer, KidCardSerializer
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
@@ -27,7 +27,7 @@ class UserViewSet(viewsets.ModelViewSet):
                 'message': 'Login successful'
             }, status=status.HTTP_200_OK)
         else:
-            return Response({'error': 'Erro ao fazer o login. Por favor, verifique se a senha e e-mail estão corretos.'}, status=status.HTTP_401_UNAUTHORIZED)
+            return Response({'error': 'Credenciais inválidas'}, status=status.HTTP_401_UNAUTHORIZED)
 
 class RecreacaoViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Recreacao.objects.all()
@@ -116,3 +116,13 @@ class ListaKidView(generics.ListAPIView):
     ordering_fields = ['nome']
     filterset_fields = ['nome']
     permission_classes = [IsAuthenticated]
+
+#---------------------------------------------------------------------------------------------------------
+class KidCardViewSet(viewsets.ModelViewSet):
+    queryset = KidCard.objects.all()
+    serializer_class = KidCardSerializer
+    permission_classes = [IsAuthenticated]
+
+    def perform_create(self, serializer):
+        serializer.save()
+        print(f'Criança cadastrada na brincadeira com sucesso.')
