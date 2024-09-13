@@ -1,0 +1,17 @@
+---
+deployment:
+  tasks:
+    # 1. Ativar o ambiente virtual Python
+    - /home/your_cpanel_user/virtualenv/django_app/3.8/bin/activate
+
+    # 2. Instalar as dependências do projeto (definidas no requirements.txt)
+    - pip install -r requirements.txt
+
+    # 3. Aplicar as migrações do banco de dados
+    - python manage.py migrate
+
+    # 4. Coletar os arquivos estáticos
+    - python manage.py collectstatic --noinput
+
+    # 5. Iniciar o servidor Django (substitua conforme necessário)
+    - python manage.py runserver
